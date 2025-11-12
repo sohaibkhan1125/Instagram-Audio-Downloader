@@ -29,7 +29,9 @@ const Footer = () => {
             {/* Social Icons */}
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://twitter.com/"
+                target="_blank"
+                rel="noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="Twitter"
               >
@@ -38,7 +40,9 @@ const Footer = () => {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://facebook.com/"
+                target="_blank"
+                rel="noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="Facebook"
               >
@@ -47,7 +51,9 @@ const Footer = () => {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://instagram.com/"
+                target="_blank"
+                rel="noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="Instagram"
               >
@@ -56,7 +62,9 @@ const Footer = () => {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://linkedin.com/"
+                target="_blank"
+                rel="noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="LinkedIn"
               >
@@ -145,13 +153,13 @@ const Footer = () => {
               © {currentYear} InstaAudio. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
+              <a href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors duration-200">
                 Privacy Policy
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
+              <a href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors duration-200">
                 Terms of Service
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
+              <a href="/dmca" className="text-gray-400 hover:text-white transition-colors duration-200">
                 DMCA
               </a>
             </div>

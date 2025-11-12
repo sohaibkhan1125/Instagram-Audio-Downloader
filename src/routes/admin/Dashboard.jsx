@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from './auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -52,7 +52,7 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 		}
 	}, []);
 
-	const handleSaveMaintenance = async () => {
+	const handleSaveMaintenance = useCallback(async () => {
 		try {
 			setSaving(true);
 			localStorage.setItem('maintenanceMode', JSON.stringify(maintenanceMode));
@@ -62,9 +62,9 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 		} finally {
 			setSaving(false);
 		}
-	};
+	}, [maintenanceMode]);
 
-	const handleSaveHero = async () => {
+	const handleSaveHero = useCallback(async () => {
 		try {
 			setSavingHero(true);
 			saveHeroSectionData({
@@ -78,7 +78,7 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 		} finally {
 			setSavingHero(false);
 		}
-	};
+	}, [heroTitle, heroSubtitle, heroButtonText]);
 
 	const handleLogout = async () => {
 		await signOutUser();
@@ -233,7 +233,7 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 			);
 		}
 		return null;
-	}, [activeKey, maintenanceMode, saving, heroTitle, heroSubtitle, heroButtonText, savingHero]);
+	}, [activeKey, maintenanceMode, saving, heroTitle, heroSubtitle, heroButtonText, savingHero, handleSaveHero, handleSaveMaintenance]);
 
 	return (
 		<div className="flex flex-col md:flex-row w-full h-screen">
