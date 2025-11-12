@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://cloudconvert.com/
+HostUrl=https://eu-central.storage.cloudconvert.com/tasks/3c0bfba1-3d87-4cd9-af47-09b48d4fb15e/ae3b3515-d7d3-4c53-8bb6-c727d750807c_removalai_preview.ico?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cloudconvert-production%2F20251026%2Ffra%2Fs3%2Faws4_request&X-Amz-Date=20251026T051814Z&X-Amz-Expires=86400&X-Amz-Signature=76c8fd468a3a9e6d475556c191c3839be118fd8dca8cd4e5430ae11c33c0a8bf&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3D%22ae3b3515-d7d3-4c53-8bb6-c727d750807c_removalai_preview.ico%22&response-content-type=image%2Fvnd.microsoft.icon&x-id=GetObject
