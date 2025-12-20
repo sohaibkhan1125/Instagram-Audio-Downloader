@@ -77,7 +77,7 @@ export default function QuillEditor({ initialContent, onSave }) {
         // We might just rely on props or explicit save for React.
         // Let's implement explicit save mostly, but we can do auto-update of stats.
 
-    }, [initialContent]);
+    }, [initialContent, imageHandler]);
 
     const imageHandler = useCallback(() => {
         const input = document.createElement('input');
@@ -190,7 +190,7 @@ export default function QuillEditor({ initialContent, onSave }) {
                 indent = indent.substring(tab.length);
             }
             formatted += indent + '<' + element + '>\r\n';
-            if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith("input") && !element.startsWith("img") && !element.startsWith("br")) {
+            if (element.match(/^<?\w[^>]*[^/]$/) && !element.startsWith("input") && !element.startsWith("img") && !element.startsWith("br")) {
                 indent += tab;
             }
         });

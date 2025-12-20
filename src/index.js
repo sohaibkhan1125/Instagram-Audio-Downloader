@@ -8,6 +8,7 @@ import AdminLayout from './routes/admin/AdminLayout';
 import AdminLogin from './routes/admin/Login';
 import AdminSignup from './routes/admin/Signup';
 import AdminDashboard from './routes/admin/Dashboard';
+import AdminLanding from './routes/admin/AdminLanding';
 import { AuthProvider } from './routes/admin/auth/AuthContext';
 import { ProtectedRoute, RedirectIfAuthed } from './routes/admin/auth/RouteGuards';
 import reportWebVitals from './reportWebVitals';
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
 		path: '/admin',
 		element: <AdminLayout />,
 		children: [
+			{
+				index: true,
+				element: <AdminLanding />
+			},
 			{
 				path: 'login',
 				element: (
