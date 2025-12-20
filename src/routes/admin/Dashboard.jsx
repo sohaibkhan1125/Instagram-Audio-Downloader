@@ -2,13 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from './auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { FiHome, FiSettings, FiBarChart2, FiFileText, FiLogOut, FiType } from 'react-icons/fi';
-import { getHeroSectionData, saveHeroSectionData } from '../../utils/localStorageManager';
+import { FiHome, FiSettings, FiBarChart2, FiFileText, FiLogOut, FiType, FiEdit } from 'react-icons/fi';
+import { fetchHeroSectionData, updateHeroSectionData, fetchMaintenanceMode, updateMaintenanceMode, fetchHomeRichText, updateHomeRichText } from '../../utils/supabaseService';
+import QuillEditor from '../../components/QuillEditor';
 
+// ... (imports remain)
 const NAV_ITEMS = [
 	{ key: 'home', label: 'Dashboard Home', icon: FiHome },
 	{ key: 'general', label: 'General Settings', icon: FiSettings },
-	{ key: 'hero', label: 'Hero Section Management', icon: FiType },
+	{ key: 'hero', label: 'Hero Section', icon: FiType },
+	{ key: 'content', label: 'Home Content', icon: FiEdit },
 	{ key: 'seo', label: 'SEO Tools', icon: FiBarChart2 },
 	{ key: 'reports', label: 'Reports', icon: FiFileText }
 ];
@@ -27,35 +30,52 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 	const [heroButtonText, setHeroButtonText] = useState('');
 	const [savingHero, setSavingHero] = useState(false);
 
-	// Load maintenance mode from localStorage
+	// Home Rich Text state
+	const [homeContent, setHomeContent] = useState('');
+	const [loadingContent, setLoadingContent] = useState(true);
+
+	// Load maintenance mode from Supabase
 	useEffect(() => {
-		try {
-			const stored = localStorage.getItem('maintenanceMode');
-			if (stored != null) {
-				setMaintenanceMode(Boolean(JSON.parse(stored)));
-			}
-		} catch {}
+		const loadMaintenance = async () => {
+			const mode = await fetchMaintenanceMode();
+			setMaintenanceMode(mode);
+		};
+		loadMaintenance();
 	}, []);
 
-	// Load hero section data from localStorage
+	// Load hero section data from Supabase
 	useEffect(() => {
-		const data = getHeroSectionData();
-		if (data) {
-			setHeroTitle(data.title || '');
-			setHeroSubtitle(data.subtitle || '');
-			setHeroButtonText(data.buttonText || '');
-		} else {
-			// Set default values if no data exists
-			setHeroTitle('Download Instagram Audio Instantly');
-			setHeroSubtitle('Paste your link and get high-quality audio in seconds.');
-			setHeroButtonText('Download Now');
-		}
+		const loadHero = async () => {
+			const data = await fetchHeroSectionData();
+			if (data) {
+				setHeroTitle(data.title || '');
+				setHeroSubtitle(data.subtitle || '');
+				setHeroButtonText(data.buttonText || '');
+			} else {
+				// Set default values if no data exists
+				setHeroTitle('Download Instagram Audio Instantly');
+				setHeroSubtitle('Paste your link and get high-quality audio in seconds.');
+				setHeroButtonText('Download Now');
+			}
+		};
+		loadHero();
+	}, []);
+
+	// Load home rich text
+	useEffect(() => {
+		const loadContent = async () => {
+			setLoadingContent(true);
+			const content = await fetchHomeRichText();
+			setHomeContent(content);
+			setLoadingContent(false);
+		};
+		loadContent();
 	}, []);
 
 	const handleSaveMaintenance = useCallback(async () => {
 		try {
 			setSaving(true);
-			localStorage.setItem('maintenanceMode', JSON.stringify(maintenanceMode));
+			await updateMaintenanceMode(maintenanceMode);
 			toast.success('✅ Maintenance mode updated successfully.');
 		} catch {
 			toast.error('Failed to save changes.');
@@ -67,7 +87,7 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 	const handleSaveHero = useCallback(async () => {
 		try {
 			setSavingHero(true);
-			saveHeroSectionData({
+			await updateHeroSectionData({
 				title: heroTitle,
 				subtitle: heroSubtitle,
 				buttonText: heroButtonText
@@ -90,9 +110,8 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 		return (
 			<button
 				onClick={onClick}
-				className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition ${
-					isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-				}`}
+				className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition ${isActive ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+					}`}
 			>
 				<Icon className="text-lg" />
 				<span className="text-sm font-medium">{item.label}</span>
@@ -115,16 +134,14 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 							<button
 								type="button"
 								onClick={() => setMaintenanceMode((v) => !v)}
-								className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
-									maintenanceMode ? 'bg-gray-900' : 'bg-gray-300'
-								}`}
+								className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${maintenanceMode ? 'bg-gray-900' : 'bg-gray-300'
+									}`}
 								aria-pressed={maintenanceMode}
 								aria-label="Toggle maintenance mode"
 							>
 								<span
-									className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${
-										maintenanceMode ? 'translate-x-5' : 'translate-x-1'
-									}`}
+									className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${maintenanceMode ? 'translate-x-5' : 'translate-x-1'
+										}`}
 								/>
 							</button>
 							<span className="text-sm text-gray-600">On</span>
@@ -216,6 +233,28 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 				</div>
 			);
 		}
+		if (activeKey === 'content') {
+			return (
+				<div className="space-y-6 h-full flex flex-col">
+					<header>
+						<h1 className="text-2xl font-semibold">Home Page Content</h1>
+						<p className="text-sm text-gray-600">Edit the custom content displayed on the homepage using the rich text editor.</p>
+					</header>
+					<div className="flex-1 min-h-0">
+						{loadingContent ? (
+							<div className="flex items-center justify-center p-10">
+								<span className="animate-spin inline-block w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full" />
+							</div>
+						) : (
+							<QuillEditor
+								initialContent={homeContent}
+								onSave={updateHomeRichText}
+							/>
+						)}
+					</div>
+				</div>
+			);
+		}
 		if (activeKey === 'seo') {
 			return (
 				<div className="space-y-3">
@@ -233,7 +272,7 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 			);
 		}
 		return null;
-	}, [activeKey, maintenanceMode, saving, heroTitle, heroSubtitle, heroButtonText, savingHero, handleSaveHero, handleSaveMaintenance]);
+	}, [activeKey, maintenanceMode, saving, heroTitle, heroSubtitle, heroButtonText, savingHero, handleSaveHero, handleSaveMaintenance, homeContent, loadingContent]);
 
 	return (
 		<div className="flex flex-col md:flex-row w-full h-screen">

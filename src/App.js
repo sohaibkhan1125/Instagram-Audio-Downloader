@@ -9,6 +9,7 @@ import './App.css';
 import { Link } from 'react-router-dom';
 import { useAuth } from './routes/admin/auth/AuthContext';
 import MaintenanceGate from './components/MaintenanceGate';
+import HomeContent from './components/HomeContent';
 
 function App() {
 	const { user } = useAuth();
@@ -52,6 +53,7 @@ function App() {
 			</div>
 			<main>
 				<DownloaderTool />
+				<HomeContent />
 				<HowToUse />
 				<KeyFeatures />
 				<FAQ />

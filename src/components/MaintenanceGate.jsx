@@ -1,31 +1,32 @@
 import React, { useEffect, useState } from 'react';
+import { fetchMaintenanceMode, subscribeToMaintenanceMode } from '../utils/supabaseService';
 
 export default function MaintenanceGate() {
 	const [maintenance, setMaintenance] = useState(false);
 
 	useEffect(() => {
-		// initial read
-		try {
-			const stored = localStorage.getItem('maintenanceMode');
-			if (stored != null) {
-				setMaintenance(Boolean(JSON.parse(stored)));
-			}
-		} catch {}
-		// listen to changes from other tabs or admin page
-		const onStorage = (e) => {
-			if (e.key === 'maintenanceMode') {
-				try {
-					setMaintenance(Boolean(JSON.parse(e.newValue)));
-				} catch {
-					setMaintenance(false);
-				}
-			}
+		let unsubscribe = null;
+
+		const init = async () => {
+			// Initial fetch
+			const mode = await fetchMaintenanceMode();
+			setMaintenance(mode);
+
+			// Subscribe to real-time updates
+			unsubscribe = subscribeToMaintenanceMode((newMode) => {
+				setMaintenance(newMode);
+			});
 		};
-		window.addEventListener('storage', onStorage);
-		return () => window.removeEventListener('storage', onStorage);
+
+		init();
+
+		return () => {
+			if (unsubscribe) unsubscribe();
+		};
 	}, []);
 
 	if (!maintenance) return null;
+
 	return (
 		<div className="fixed inset-0 z-[9999] flex items-center justify-center bg-gray-900 text-white text-2xl font-semibold">
 			Website is currently under maintenance. Please check back later.
