@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../../components/SEO';
 
 export default function AdminLanding() {
     return (
         <div className="w-full flex flex-col items-center text-center space-y-12 py-12 md:py-24">
+            <SEO title="Admin Portal - Instagram Audio Downloader" noindex={true} />
 
             {/* Hero Section */}
             <div className="space-y-6 max-w-2xl px-4 animate-fadeIn">

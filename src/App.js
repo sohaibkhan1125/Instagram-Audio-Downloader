@@ -10,27 +10,14 @@ import { Link } from 'react-router-dom';
 import { useAuth } from './routes/admin/auth/AuthContext';
 import MaintenanceGate from './components/MaintenanceGate';
 import HomeContent from './components/HomeContent';
+import SEO from './components/SEO';
 
 function App() {
 	const { user } = useAuth();
 	return (
 		<div className="App">
+			<SEO />
 			<MaintenanceGate />
-			{/* Add structured data for better SEO */}
-			<script type="application/ld+json">
-				{JSON.stringify({
-					"@context": "https://schema.org",
-					"@type": "WebSite",
-					"name": "Instagram Audio Downloader",
-					"url": "https://instaaudio.com",
-					"description": "Download high-quality M4A audio from any Instagram post or reel instantly. Free, fast, and secure Instagram audio downloader.",
-					"potentialAction": {
-						"@type": "SearchAction",
-						"target": "https://instaaudio.com/?url={search_term_string}",
-						"query-input": "required name=search_term_string"
-					}
-				})}
-			</script>
 
 			<Navbar />
 			<div className="max-w-6xl mx-auto px-4 mt-6">

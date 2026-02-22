@@ -16,6 +16,29 @@ export default function QuillEditor({ initialContent, onSave }) {
     const [showCodeModal, setShowCodeModal] = useState(false);
     const [codeOutput, setCodeOutput] = useState('');
 
+    const imageHandler = useCallback(() => {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = () => {
+            const file = input.files[0];
+            if (/^image\//.test(file.type)) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const range = quillInstance.current.getSelection();
+                    quillInstance.current.insertEmbed(range.index, 'image', reader.result);
+                    quillInstance.current.setSelection(range.index + 1);
+                    toast.success('Image inserted successfully');
+                };
+            } else {
+                toast.error('Please select a valid image file');
+            }
+        };
+    }, []);
+
     useEffect(() => {
         const Quill = getQuill();
         if (!Quill) {
@@ -79,28 +102,6 @@ export default function QuillEditor({ initialContent, onSave }) {
 
     }, [initialContent, imageHandler]);
 
-    const imageHandler = useCallback(() => {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
-        input.click();
-
-        input.onchange = () => {
-            const file = input.files[0];
-            if (/^image\//.test(file.type)) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    const range = quillInstance.current.getSelection();
-                    quillInstance.current.insertEmbed(range.index, 'image', reader.result);
-                    quillInstance.current.setSelection(range.index + 1);
-                    toast.success('Image inserted successfully');
-                };
-            } else {
-                toast.error('Please select a valid image file');
-            }
-        };
-    }, []);
 
     const updateStats = () => {
         if (!quillInstance.current) return;

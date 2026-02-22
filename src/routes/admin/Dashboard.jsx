@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { FiHome, FiSettings, FiBarChart2, FiFileText, FiLogOut, FiType, FiEdit } from 'react-icons/fi';
 import { fetchHeroSectionData, updateHeroSectionData, fetchMaintenanceMode, updateMaintenanceMode, fetchHomeRichText, updateHomeRichText } from '../../utils/supabaseService';
 import QuillEditor from '../../components/QuillEditor';
+import SEO from '../../components/SEO';
 
 // ... (imports remain)
 const NAV_ITEMS = [
@@ -276,6 +277,7 @@ export default function AdminDashboard({ initialTab = 'general' }) {
 
 	return (
 		<div className="flex flex-col md:flex-row w-full h-screen">
+			<SEO title="Admin Dashboard - Instagram Audio Downloader" noindex={true} />
 			<aside className="md:w-[30%] w-full bg-gray-900 text-white flex flex-col justify-between p-6 h-auto md:h-screen">
 				<div>
 					<h2 className="text-2xl font-bold mb-6">Admin Panel</h2>

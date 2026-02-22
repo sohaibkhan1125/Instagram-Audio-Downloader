@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import AdminLayout from './routes/admin/AdminLayout';
 import AdminLogin from './routes/admin/Login';
@@ -65,10 +66,12 @@ const router = createBrowserRouter([
 
 root.render(
 	<React.StrictMode>
-		<AuthProvider>
-			<RouterProvider router={router} />
-			<Toaster position="top-right" />
-		</AuthProvider>
+		<HelmetProvider>
+			<AuthProvider>
+				<RouterProvider router={router} />
+				<Toaster position="top-right" />
+			</AuthProvider>
+		</HelmetProvider>
 	</React.StrictMode>
 );
 
